@@ -1,0 +1,37 @@
+{
+  "allowUnidentifiedClientExtensionGrants": false,
+  "allowUnidentifiedClientROCreds": false,
+  "allowedOrigins": [],
+  "authorizationCodeEntropy": 30,
+  "authorizationCodeTimeout": 60,
+  "bypassAuthorizationForApprovedGrants": false,
+  "defaultScopeDescription": "",
+  "exclusiveScopeGroups": [],
+  "exclusiveScopes": [],
+  "persistentGrantContract": {
+    "coreAttributes": [
+      {
+        "name": "USER_KEY"
+      },
+      {
+        "name": "USER_NAME"
+      }
+    ],
+    "extendedAttributes": []
+  },
+  "persistentGrantReuseGrantTypes": [
+    "IMPLICIT"
+  ],
+  "refreshRollingInterval": 0,
+  "refreshTokenLength": 42,
+  "rollRefreshTokenValues": true,
+  "scopeGroups": [],
+  "scopes": [
+    {
+      "description": "Demo scope description",
+      "name": "Demo"
+    }
+  ],
+  "tokenEndpointBaseUrl": "",
+  "trackUserSessionsForLogout": false
+}

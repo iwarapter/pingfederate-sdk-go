@@ -1,0 +1,8 @@
+vendor
+*.out
+coverage.txt
+report.json
+.scannerwork/
+.vscode/
+pingfederate/pingfederate-data.zip
+pingfederate/pingfederate.lic

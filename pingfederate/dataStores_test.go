@@ -37,9 +37,9 @@ func TestDataStoreSimpleRequests(t *testing.T) {
 	equals(t, *result.Name, "myDb")
 	ID := *result.Id
 
-	get := GetJdbcDataStoreInput{Id: ID}
+	get := GetDataStoreInput{Id: ID}
 
-	resultDS, response, err := svc.DataStores.GetJdbcDataStore(&get)
+	resultDS, response, err := svc.DataStores.GetDataStore(&get)
 	equals(t, err, nil)
 	equals(t, response.StatusCode, 200)
 	equals(t, *resultDS.ConnectionUrl, "jdbc:h2:mem:test_mem")

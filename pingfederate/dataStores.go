@@ -155,6 +155,27 @@ func (s *DataStoresService) DeleteDataStore(input *DeleteDataStoreInput) (result
 
 }
 
+//GetDataStore - Find data store by ID.
+//RequestType: GET
+//Input: input *GetDataStoreInput
+func (s *DataStoresService) GetDataStore(input *GetDataStoreInput) (result *DataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("GET", rel, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
 //GetJdbcDataStore - Find data store by ID.
 //RequestType: GET
 //Input: input *GetJdbcDataStoreInput

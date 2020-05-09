@@ -3584,6 +3584,10 @@ type GetCustomDataStoreDescriptorInput struct {
 	Id string
 }
 
+type GetDataStoreInput struct {
+	Id string
+}
+
 type GetDecryptionKeysInput struct {
 	Id string
 }

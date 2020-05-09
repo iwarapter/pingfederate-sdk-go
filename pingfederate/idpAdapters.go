@@ -89,6 +89,9 @@ func (s *IdpAdaptersService) CreateIdpAdapter(input *CreateIdpAdapterInput) (res
 	if err != nil {
 		return nil, nil, err
 	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
 
 	resp, err = s.client.do(req, &result)
 	if err != nil {
@@ -130,6 +133,9 @@ func (s *IdpAdaptersService) UpdateIdpAdapter(input *UpdateIdpAdapterInput) (res
 	req, err := s.client.newRequest("PUT", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)

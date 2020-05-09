@@ -15,35 +15,39 @@ func TestDataStoreSimpleGetRequest(t *testing.T) {
 
 func TestDataStoreSimpleRequests(t *testing.T) {
 	svc := basicClient()
+	svc.LogDebug = true
 
-	create := CreateDataStoreInput{}
-	create.Body.JdbcDataStore = &JdbcDataStore{
+	create := CreateJdbcDataStoreInput{}
+	create.Body = JdbcDataStore{
 		Type:                      String("JDBC"),
 		MaskAttributeValues:       Bool(false),
 		ConnectionUrl:             String("jdbc:h2:mem:test_mem"),
 		DriverClass:               String("org.h2.Driver"),
 		UserName:                  String("user"),
+		Name:                      String("myDb"),
 		Password:                  String("pass"),
 		ValidateConnectionSql:     String(""),
 		AllowMultiValueAttributes: Bool(true),
 	}
-	result, response, err := svc.DataStores.CreateDataStore(&create)
+	result, response, err := svc.DataStores.CreateJdbcDataStore(&create)
 	equals(t, err, nil)
 	equals(t, response.StatusCode, 201)
 	equals(t, *result.ConnectionUrl, "jdbc:h2:mem:test_mem")
 	equals(t, *result.Type, "JDBC")
+	equals(t, *result.Name, "myDb")
 	ID := *result.Id
 
-	get := GetDataStoreInput{Id: ID}
+	get := GetJdbcDataStoreInput{Id: ID}
 
-	result, response, err = svc.DataStores.GetDataStore(&get)
+	resultDS, response, err := svc.DataStores.GetJdbcDataStore(&get)
 	equals(t, err, nil)
 	equals(t, response.StatusCode, 200)
-	equals(t, *result.ConnectionUrl, "jdbc:h2:mem:test_mem")
-	equals(t, *result.Type, "JDBC")
+	equals(t, *resultDS.ConnectionUrl, "jdbc:h2:mem:test_mem")
+	equals(t, *resultDS.Type, "JDBC")
+	equals(t, *resultDS.Name, "myDb")
 
-	update := UpdateDataStoreInput{Id: ID}
-	update.Body.JdbcDataStore = &JdbcDataStore{
+	update := UpdateJdbcDataStoreInput{Id: ID}
+	update.Body = JdbcDataStore{
 		Type:                      String("JDBC"),
 		MaskAttributeValues:       Bool(false),
 		ConnectionUrl:             String("jdbc:h2:mem:test_mem"),
@@ -53,7 +57,7 @@ func TestDataStoreSimpleRequests(t *testing.T) {
 		ValidateConnectionSql:     String(""),
 		AllowMultiValueAttributes: Bool(true),
 	}
-	result, response, err = svc.DataStores.UpdateDataStore(&update)
+	result, response, err = svc.DataStores.UpdateJdbcDataStore(&update)
 	equals(t, err, nil)
 	equals(t, response.StatusCode, 200)
 	equals(t, *result.ConnectionUrl, "jdbc:h2:mem:test_mem")

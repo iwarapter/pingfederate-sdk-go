@@ -47,6 +47,9 @@ func (s *BulkService) ImportConfiguration(input *ImportConfigurationInput) (resp
 	if err != nil {
 		return nil, err
 	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
 
 	resp, err = s.client.do(req, nil)
 	if err != nil {

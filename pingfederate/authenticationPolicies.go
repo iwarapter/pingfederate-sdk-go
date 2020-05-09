@@ -75,6 +75,9 @@ func (s *AuthenticationPoliciesService) UpdateDefaultAuthenticationPolicy(input 
 	if err != nil {
 		return nil, nil, err
 	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
 
 	resp, err = s.client.do(req, &result)
 	if err != nil {

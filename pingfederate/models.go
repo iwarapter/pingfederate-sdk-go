@@ -1057,6 +1057,7 @@ type DataStore struct {
 	Id                  *string `json:"id,omitempty"`
 	MaskAttributeValues *bool   `json:"maskAttributeValues,omitempty"`
 	Type                *string `json:"type,omitempty"`
+	Name                *string `json:"name,omitempty"`
 }
 
 //DataStoreAttribute - The data store attribute.
@@ -3165,10 +3166,14 @@ type ConvertInput struct {
 
 type CreateApcMappingInput struct {
 	Body ApcToPersistentGrantMapping
+
+	BypassExternalValidation *bool
 }
 
 type CreateApcToSpAdapterMappingInput struct {
 	Body ApcToSpAdapterMapping
+
+	BypassExternalValidation *bool
 }
 
 type CreateApplicationInput struct {
@@ -3189,14 +3194,14 @@ type CreateClientInput struct {
 
 type CreateConnectionInput struct {
 	Body IdpConnection
+
+	BypassExternalValidation *bool
 }
 
-type CreateDataStoreInput struct {
-	Body struct {
-		*JdbcDataStore
-		*CustomDataStore
-		*LdapDataStore
-	}
+type CreateCustomDataStoreInput struct {
+	Body CustomDataStore
+
+	BypassExternalValidation *bool
 }
 
 type CreateDynamicClientRegistrationPolicyInput struct {
@@ -3205,22 +3210,38 @@ type CreateDynamicClientRegistrationPolicyInput struct {
 
 type CreateGroupInput struct {
 	Body TokenExchangeGeneratorGroup
+
+	BypassExternalValidation *bool
 }
 
 type CreateIdentityProfileInput struct {
 	Body LocalIdentityProfile
+
+	BypassExternalValidation *bool
 }
 
 type CreateIdpAdapterInput struct {
 	Body IdpAdapter
+
+	BypassExternalValidation *bool
 }
 
 type CreateIdpAdapterMappingInput struct {
 	Body IdpAdapterMapping
+
+	BypassExternalValidation *bool
 }
 
 type CreateIdpToSpAdapterMappingInput struct {
 	Body IdpToSpAdapterMapping
+
+	BypassExternalValidation *bool
+}
+
+type CreateJdbcDataStoreInput struct {
+	Body JdbcDataStore
+
+	BypassExternalValidation *bool
 }
 
 type CreateKerberosRealmInput struct {
@@ -3231,8 +3252,16 @@ type CreateKeyPairInput struct {
 	Body NewKeyPairSettings
 }
 
+type CreateLdapDataStoreInput struct {
+	Body LdapDataStore
+
+	BypassExternalValidation *bool
+}
+
 type CreateMappingInput struct {
 	Body AccessTokenMapping
+
+	BypassExternalValidation *bool
 }
 
 type CreateNotificationPublisherInput struct {
@@ -3249,10 +3278,14 @@ type CreatePasswordCredentialValidatorInput struct {
 
 type CreatePolicyInput struct {
 	Body OpenIdConnectPolicy
+
+	BypassExternalValidation *bool
 }
 
 type CreateResourceOwnerCredentialsMappingInput struct {
 	Body ResourceOwnerCredentialsMapping
+
+	BypassExternalValidation *bool
 }
 
 type CreateSourcePolicyInput struct {
@@ -3273,6 +3306,8 @@ type CreateTokenGeneratorInput struct {
 
 type CreateTokenGeneratorMappingInput struct {
 	Body ProcessorPolicyToGeneratorMapping
+
+	BypassExternalValidation *bool
 }
 
 type CreateTokenManagerInput struct {
@@ -3285,6 +3320,8 @@ type CreateTokenProcessorInput struct {
 
 type CreateTokenToTokenMappingInput struct {
 	Body TokenToTokenMapping
+
+	BypassExternalValidation *bool
 }
 
 type DeleteAccountInput struct {
@@ -3539,11 +3576,11 @@ type GetConnectionsInput struct {
 	Filter        string
 }
 
-type GetCustomDataStoreDescriptorInput struct {
+type GetCustomDataStoreInput struct {
 	Id string
 }
 
-type GetDataStoreInput struct {
+type GetCustomDataStoreDescriptorInput struct {
 	Id string
 }
 
@@ -3607,11 +3644,19 @@ type GetIdpToSpAdapterMappingsByIdInput struct {
 	Id string
 }
 
+type GetJdbcDataStoreInput struct {
+	Id string
+}
+
 type GetKerberosRealmInput struct {
 	Id string
 }
 
 type GetKeyPairInput struct {
+	Id string
+}
+
+type GetLdapDataStoreInput struct {
 	Id string
 }
 
@@ -3744,6 +3789,8 @@ type ImportConfigurationInput struct {
 	FailFast string
 
 	Body BulkConfig
+
+	BypassExternalValidation *bool
 }
 
 type ImportCsrResponseInput struct {
@@ -3797,11 +3844,15 @@ type UpdateAccountInput struct {
 type UpdateApcMappingInput struct {
 	Body ApcToPersistentGrantMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateApcToSpAdapterMappingByIdInput struct {
 	Body ApcToSpAdapterMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateApplicationInput struct {
@@ -3862,6 +3913,8 @@ type UpdateCommonScopeGroupInput struct {
 type UpdateConnectionInput struct {
 	Body IdpConnection
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateConnectionCertsInput struct {
@@ -3869,13 +3922,11 @@ type UpdateConnectionCertsInput struct {
 	Id   string
 }
 
-type UpdateDataStoreInput struct {
-	Body struct {
-		*LdapDataStore
-		*JdbcDataStore
-		*CustomDataStore
-	}
-	Id string
+type UpdateCustomDataStoreInput struct {
+	Body CustomDataStore
+	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateDecryptionKeysInput struct {
@@ -3885,6 +3936,8 @@ type UpdateDecryptionKeysInput struct {
 
 type UpdateDefaultAuthenticationPolicyInput struct {
 	Body AuthenticationPolicy
+
+	BypassExternalValidation *bool
 }
 
 type UpdateDefaultUrlSettingsInput struct {
@@ -3928,31 +3981,55 @@ type UpdateGlobalPolicyInput struct {
 type UpdateGroupInput struct {
 	Body TokenExchangeGeneratorGroup
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateIdentityProfileInput struct {
 	Body LocalIdentityProfile
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateIdpAdapterInput struct {
 	Body IdpAdapter
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateIdpAdapterMappingInput struct {
 	Body IdpAdapterMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateIdpToSpAdapterMappingInput struct {
 	Body IdpToSpAdapterMapping
 	Id   string
+
+	BypassExternalValidation *bool
+}
+
+type UpdateJdbcDataStoreInput struct {
+	Body JdbcDataStore
+	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateKerberosRealmInput struct {
 	Body KerberosRealm
 	Id   string
+}
+
+type UpdateLdapDataStoreInput struct {
+	Body LdapDataStore
+	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateLicenseInput struct {
@@ -3966,6 +4043,8 @@ type UpdateLicenseAgreementInput struct {
 type UpdateMappingInput struct {
 	Body AccessTokenMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateMetadataUrlInput struct {
@@ -4003,6 +4082,8 @@ type UpdatePasswordCredentialValidatorInput struct {
 type UpdatePolicyInput struct {
 	Body OpenIdConnectPolicy
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateRedirectValidationSettingsInput struct {
@@ -4012,6 +4093,8 @@ type UpdateRedirectValidationSettingsInput struct {
 type UpdateResourceOwnerCredentialsMappingInput struct {
 	Body ResourceOwnerCredentialsMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateRevocationSettingsInput struct {
@@ -4039,6 +4122,8 @@ type UpdateSettingInput struct {
 
 type UpdateSettingsInput struct {
 	Body NotificationPublishersSettings
+
+	BypassExternalValidation *bool
 }
 
 type UpdateSigningSettingsInput struct {
@@ -4073,6 +4158,8 @@ type UpdateTokenGeneratorInput struct {
 type UpdateTokenGeneratorMappingByIdInput struct {
 	Body ProcessorPolicyToGeneratorMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateTokenManagerInput struct {
@@ -4088,6 +4175,8 @@ type UpdateTokenProcessorInput struct {
 type UpdateTokenToTokenMappingByIdInput struct {
 	Body TokenToTokenMapping
 	Id   string
+
+	BypassExternalValidation *bool
 }
 
 type UpdateUrlMappingsInput struct {

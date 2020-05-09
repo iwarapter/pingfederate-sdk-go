@@ -38,6 +38,9 @@ func (s *OauthTokenExchangeProcessorService) UpdateSettings(input *UpdateSetting
 	if err != nil {
 		return nil, nil, err
 	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("bypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
 
 	resp, err = s.client.do(req, &result)
 	if err != nil {
@@ -75,6 +78,9 @@ func (s *OauthTokenExchangeProcessorService) CreatePolicy(input *CreatePolicyInp
 	req, err := s.client.newRequest("POST", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("bypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)
@@ -117,6 +123,9 @@ func (s *OauthTokenExchangeProcessorService) UpdatePolicy(input *UpdatePolicyInp
 	req, err := s.client.newRequest("PUT", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("bypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)

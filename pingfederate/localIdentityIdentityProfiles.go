@@ -49,6 +49,9 @@ func (s *LocalIdentityIdentityProfilesService) CreateIdentityProfile(input *Crea
 	if err != nil {
 		return nil, nil, err
 	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
 
 	resp, err = s.client.do(req, &result)
 	if err != nil {
@@ -90,6 +93,9 @@ func (s *LocalIdentityIdentityProfilesService) UpdateIdentityProfile(input *Upda
 	req, err := s.client.newRequest("PUT", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)

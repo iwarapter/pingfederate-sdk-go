@@ -68,24 +68,18 @@ func (s *DataStoresService) GetDataStores() (result *DataStores, resp *http.Resp
 
 }
 
-//CreateDataStore - Create a new data store.
+//CreateJdbcDataStore - Create a new data store.
 //RequestType: POST
-//Input: input *CreateDataStoreInput
-func (s *DataStoresService) CreateDataStore(input *CreateDataStoreInput) (result *DataStore, resp *http.Response, err error) {
+//Input: input *CreateJdbcDataStoreInput
+func (s *DataStoresService) CreateJdbcDataStore(input *CreateJdbcDataStoreInput) (result *JdbcDataStore, resp *http.Response, err error) {
 	path := "/dataStores"
 	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
-	var req *http.Request
-	if input.Body.LdapDataStore != nil {
-		req, err = s.client.newRequest("POST", rel, input.Body.LdapDataStore)
-	}
-	if input.Body.JdbcDataStore != nil {
-		req, err = s.client.newRequest("POST", rel, input.Body.JdbcDataStore)
-	}
-	if input.Body.CustomDataStore != nil {
-		req, err = s.client.newRequest("POST", rel, input.Body.CustomDataStore)
-	}
+	req, err := s.client.newRequest("POST", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)
@@ -96,17 +90,18 @@ func (s *DataStoresService) CreateDataStore(input *CreateDataStoreInput) (result
 
 }
 
-//GetDataStore - Find data store by ID.
-//RequestType: GET
-//Input: input *GetDataStoreInput
-func (s *DataStoresService) GetDataStore(input *GetDataStoreInput) (result *DataStore, resp *http.Response, err error) {
-	path := "/dataStores/{id}"
-	path = strings.Replace(path, "{id}", input.Id, -1)
-
+//CreateLdapDataStore - Create a new data store.
+//RequestType: POST
+//Input: input *CreateLdapDataStoreInput
+func (s *DataStoresService) CreateLdapDataStore(input *CreateLdapDataStoreInput) (result *LdapDataStore, resp *http.Response, err error) {
+	path := "/dataStores"
 	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
-	req, err := s.client.newRequest("GET", rel, nil)
+	req, err := s.client.newRequest("POST", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)
@@ -117,26 +112,18 @@ func (s *DataStoresService) GetDataStore(input *GetDataStoreInput) (result *Data
 
 }
 
-//UpdateDataStore - Update a data store.
-//RequestType: PUT
-//Input: input *UpdateDataStoreInput
-func (s *DataStoresService) UpdateDataStore(input *UpdateDataStoreInput) (result *DataStore, resp *http.Response, err error) {
-	path := "/dataStores/{id}"
-	path = strings.Replace(path, "{id}", input.Id, -1)
-
+//CreateCustomDataStore - Create a new data store.
+//RequestType: POST
+//Input: input *CreateCustomDataStoreInput
+func (s *DataStoresService) CreateCustomDataStore(input *CreateCustomDataStoreInput) (result *CustomDataStore, resp *http.Response, err error) {
+	path := "/dataStores"
 	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
-	var req *http.Request
-	if input.Body.LdapDataStore != nil {
-		req, err = s.client.newRequest("PUT", rel, input.Body.LdapDataStore)
-	}
-	if input.Body.JdbcDataStore != nil {
-		req, err = s.client.newRequest("PUT", rel, input.Body.JdbcDataStore)
-	}
-	if input.Body.CustomDataStore != nil {
-		req, err = s.client.newRequest("PUT", rel, input.Body.CustomDataStore)
-	}
+	req, err := s.client.newRequest("POST", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)
@@ -158,6 +145,141 @@ func (s *DataStoresService) DeleteDataStore(input *DeleteDataStoreInput) (result
 	req, err := s.client.newRequest("DELETE", rel, nil)
 	if err != nil {
 		return nil, nil, err
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
+//GetJdbcDataStore - Find data store by ID.
+//RequestType: GET
+//Input: input *GetJdbcDataStoreInput
+func (s *DataStoresService) GetJdbcDataStore(input *GetJdbcDataStoreInput) (result *JdbcDataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("GET", rel, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
+//GetLdapDataStore - Find data store by ID.
+//RequestType: GET
+//Input: input *GetLdapDataStoreInput
+func (s *DataStoresService) GetLdapDataStore(input *GetLdapDataStoreInput) (result *LdapDataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("GET", rel, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
+//GetCustomDataStore - Find data store by ID.
+//RequestType: GET
+//Input: input *GetCustomDataStoreInput
+func (s *DataStoresService) GetCustomDataStore(input *GetCustomDataStoreInput) (result *CustomDataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("GET", rel, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
+//UpdateJdbcDataStore - Update a data store.
+//RequestType: PUT
+//Input: input *UpdateJdbcDataStoreInput
+func (s *DataStoresService) UpdateJdbcDataStore(input *UpdateJdbcDataStoreInput) (result *JdbcDataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("PUT", rel, input.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
+//UpdateLdapDataStore - Update a data store.
+//RequestType: PUT
+//Input: input *UpdateLdapDataStoreInput
+func (s *DataStoresService) UpdateLdapDataStore(input *UpdateLdapDataStoreInput) (result *LdapDataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("PUT", rel, input.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
+//UpdateCustomDataStore - Update a data store.
+//RequestType: PUT
+//Input: input *UpdateCustomDataStoreInput
+func (s *DataStoresService) UpdateCustomDataStore(input *UpdateCustomDataStoreInput) (result *CustomDataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("PUT", rel, input.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+	if input.BypassExternalValidation != nil {
+		req.Header.Add("X-BypassExternalValidation", fmt.Sprintf("%v", *input.BypassExternalValidation))
 	}
 
 	resp, err = s.client.do(req, &result)

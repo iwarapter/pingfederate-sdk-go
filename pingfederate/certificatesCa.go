@@ -28,6 +28,25 @@ func (s *CertificatesCaService) GetTrustedCAs() (result *CertViews, resp *http.R
 
 }
 
+//ImportTrustedCA - Import a new trusted certificate authority.
+//RequestType: POST
+//Input: input *ImportTrustedCAInput
+func (s *CertificatesCaService) ImportTrustedCA(input *ImportTrustedCAInput) (result *CertView, resp *http.Response, err error) {
+	path := "/certificates/ca/import"
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
+	req, err := s.client.newRequest("POST", rel, input.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp, err = s.client.do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
 //GetTrustedCert - Retrieve details of a trusted certificate authority.
 //RequestType: GET
 //Input: input *GetTrustedCertInput
@@ -58,25 +77,6 @@ func (s *CertificatesCaService) DeleteTrustedCA(input *DeleteTrustedCAInput) (re
 
 	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
 	req, err := s.client.newRequest("DELETE", rel, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	resp, err = s.client.do(req, &result)
-	if err != nil {
-		return result, resp, err
-	}
-	return result, resp, nil
-
-}
-
-//ImportTrustedCA - Import a new trusted certificate authority.
-//RequestType: POST
-//Input: input *ImportTrustedCAInput
-func (s *CertificatesCaService) ImportTrustedCA(input *ImportTrustedCAInput) (result *CertView, resp *http.Response, err error) {
-	path := "/certificates/ca/import"
-	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.client.Context, path)}
-	req, err := s.client.newRequest("POST", rel, input.Body)
 	if err != nil {
 		return nil, nil, err
 	}

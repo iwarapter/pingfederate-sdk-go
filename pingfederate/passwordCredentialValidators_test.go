@@ -6,7 +6,6 @@ import (
 
 func TestPasswordCredentialValidatorsDescriptors(t *testing.T) {
 	svc := basicClient()
-	svc.LogDebug = true
 
 	result1, resp1, err1 := svc.PasswordCredentialValidators.GetPasswordCredentialValidatorDescriptors()
 	equals(t, nil, err1)

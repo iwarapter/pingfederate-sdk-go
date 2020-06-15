@@ -15,6 +15,6 @@ require (
 	github.com/opencontainers/runc v0.1.1 // indirect
 	github.com/ory/dockertest v3.3.5+incompatible
 	github.com/sirupsen/logrus v1.4.2 // indirect
-	golang.org/x/net v0.0.0-20191014212845-da9a3fd4c582 // indirect
 	golang.org/x/sys v0.0.0-20191018095205-727590c5006e // indirect
+	golang.org/x/tools v0.0.0-20200612220849-54c614fe050c // indirect
 )

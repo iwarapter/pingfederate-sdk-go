@@ -13,6 +13,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/iwarapter/pingfederate-sdk-go/services/version"
+
 	"github.com/ory/dockertest"
 )
 
@@ -65,10 +67,10 @@ func TestMain(m *testing.M) {
 		var err error
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		pfUrl, _ = url.Parse(fmt.Sprintf("https://localhost:%s", resource.GetPort("9999/tcp")))
-		client := NewClient("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+		client := version.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
 
 		log.Println("Attempting to connect to PingFederate admin API....")
-		_, _, err = client.Version.GetVersion()
+		_, _, err = client.GetVersion()
 		return err
 	}); err != nil {
 		log.Fatalf("Could not connect to docker: %s", err)
@@ -95,13 +97,13 @@ func TestMain(m *testing.M) {
 // 	return NewClient("Administrator", "2Federate", url, "/pf-admin-api/v1", nil)
 // }
 
-func basicClient() *PfClient {
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	return NewClient("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
-}
+//func basicClient() *client.PfClient {
+//	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+//	return client.NewClient("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+//}
 
 // assert fails the test if the condition is false.
-func assert(tb testing.TB, condition bool, msg string, v ...interface{}) {
+func Assert(tb testing.TB, condition bool, msg string, v ...interface{}) {
 	if !condition {
 		_, file, line, _ := runtime.Caller(1)
 		fmt.Printf("\033[31m%s:%d: "+msg+"\033[39m\n\n", append([]interface{}{filepath.Base(file), line}, v...)...)
@@ -110,7 +112,7 @@ func assert(tb testing.TB, condition bool, msg string, v ...interface{}) {
 }
 
 // ok fails the test if an err is not nil.
-func ok(tb testing.TB, err error) {
+func Ok(tb testing.TB, err error) {
 	if err != nil {
 		_, file, line, _ := runtime.Caller(1)
 		fmt.Printf("\033[31m%s:%d: unexpected error: %s\033[39m\n\n", filepath.Base(file), line, err.Error())

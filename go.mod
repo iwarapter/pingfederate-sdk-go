@@ -10,11 +10,14 @@ require (
 	github.com/containerd/continuity v0.0.0-20190827140505-75bee3e2ccb6 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/google/go-cmp v0.4.1 // indirect
+	github.com/gotestyourself/gotestyourself v1.4.0 // indirect
+	github.com/lib/pq v1.7.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/opencontainers/runc v0.1.1 // indirect
 	github.com/ory/dockertest v3.3.5+incompatible
 	github.com/sirupsen/logrus v1.4.2 // indirect
+	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
 	golang.org/x/sys v0.0.0-20191018095205-727590c5006e // indirect
-	golang.org/x/tools v0.0.0-20200612220849-54c614fe050c // indirect
 )

@@ -145,6 +145,27 @@ func (s *DataStoresService) CreateCustomDataStore(input *CreateCustomDataStoreIn
 
 }
 
+//GetDataStore - Find data store by ID.
+//RequestType: GET
+//Input: input *GetDataStoreInput
+func (s *DataStoresService) GetDataStore(input *GetDataStoreInput) (result *models.DataStore, resp *http.Response, err error) {
+	path := "/dataStores/{id}"
+	path = strings.Replace(path, "{id}", input.Id, -1)
+
+	rel := &url.URL{Path: fmt.Sprintf("%s%s", s.Client.Context, path)}
+	req, err := s.Client.NewRequest("GET", rel, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	resp, err = s.Client.Do(req, &result)
+	if err != nil {
+		return result, resp, err
+	}
+	return result, resp, nil
+
+}
+
 //DeleteDataStore - Delete a data store.
 //RequestType: DELETE
 //Input: input *DeleteDataStoreInput
@@ -404,6 +425,10 @@ type GetCustomDataStoreInput struct {
 }
 
 type GetCustomDataStoreDescriptorInput struct {
+	Id string
+}
+
+type GetDataStoreInput struct {
 	Id string
 }
 

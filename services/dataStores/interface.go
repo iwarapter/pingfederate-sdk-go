@@ -13,6 +13,7 @@ type DataStoresAPI interface {
 	CreateJdbcDataStore(input *CreateJdbcDataStoreInput) (result *models.JdbcDataStore, resp *http.Response, err error)
 	CreateLdapDataStore(input *CreateLdapDataStoreInput) (result *models.LdapDataStore, resp *http.Response, err error)
 	CreateCustomDataStore(input *CreateCustomDataStoreInput) (result *models.CustomDataStore, resp *http.Response, err error)
+	GetDataStore(input *GetDataStoreInput) (result *models.DataStore, resp *http.Response, err error)
 	DeleteDataStore(input *DeleteDataStoreInput) (result *models.ApiResult, resp *http.Response, err error)
 	GetJdbcDataStore(input *GetJdbcDataStoreInput) (result *models.JdbcDataStore, resp *http.Response, err error)
 	GetLdapDataStore(input *GetLdapDataStoreInput) (result *models.LdapDataStore, resp *http.Response, err error)

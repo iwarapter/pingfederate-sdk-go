@@ -1,8 +1,9 @@
 package pingfederate
 
 import (
-	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"testing"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 
 	"github.com/iwarapter/pingfederate-sdk-go/services/passwordCredentialValidators"
 )

@@ -1,9 +1,10 @@
 package pingfederate
 
 import (
+	"testing"
+
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"github.com/iwarapter/pingfederate-sdk-go/services/spIdpConnections"
-	"testing"
 )
 
 func TestSpIdpConnections(t *testing.T) {

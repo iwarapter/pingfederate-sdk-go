@@ -1,9 +1,10 @@
 package pingfederate
 
 import (
+	"testing"
+
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"github.com/iwarapter/pingfederate-sdk-go/services/spDefaultUrls"
-	"testing"
 )
 
 func TestSpDefaultUrls(t *testing.T) {

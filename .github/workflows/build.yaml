@@ -25,11 +25,6 @@ jobs:
         export PATH=$PATH:$(go env GOPATH)/bin
         staticcheck ./...
 
-    - name: Run Gosec Security Scanner
-      uses: securego/gosec@master
-      with:
-        args: ./...
-
     - name: Check dependencies
       run: |
         go mod tidy

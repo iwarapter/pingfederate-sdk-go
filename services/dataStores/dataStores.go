@@ -369,7 +369,7 @@ func (s *DataStoresService) InvokeAction(input *InvokeActionInput) (result *mode
 }
 
 type CreateCustomDataStoreInput struct {
-	Body models.JdbcDataStore
+	Body models.CustomDataStore
 
 	BypassExternalValidation *bool
 }
@@ -381,7 +381,7 @@ type CreateJdbcDataStoreInput struct {
 }
 
 type CreateLdapDataStoreInput struct {
-	Body models.JdbcDataStore
+	Body models.LdapDataStore
 
 	BypassExternalValidation *bool
 }
@@ -421,7 +421,7 @@ type InvokeActionInput struct {
 }
 
 type UpdateCustomDataStoreInput struct {
-	Body models.JdbcDataStore
+	Body models.CustomDataStore
 	Id   string
 
 	BypassExternalValidation *bool
@@ -435,7 +435,7 @@ type UpdateJdbcDataStoreInput struct {
 }
 
 type UpdateLdapDataStoreInput struct {
-	Body models.JdbcDataStore
+	Body models.LdapDataStore
 	Id   string
 
 	BypassExternalValidation *bool

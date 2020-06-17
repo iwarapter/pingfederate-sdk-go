@@ -1,18 +1,21 @@
-package pingfederate
+package pingfederate_test
 
 import (
 	"testing"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"github.com/iwarapter/pingfederate-sdk-go/services/spDefaultUrls"
 )
 
 func TestSpDefaultUrls(t *testing.T) {
-	svc := spDefaultUrls.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+	svc := spDefaultUrls.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
 
 	input1 := spDefaultUrls.UpdateDefaultUrlsInput{
 		Body: models.SpDefaultUrls{
-			ConfirmSlo: Bool(true),
+			ConfirmSlo: pingfederate.Bool(true),
 		},
 	}
 	result1, resp1, err1 := svc.UpdateDefaultUrls(&input1)

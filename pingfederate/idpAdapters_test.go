@@ -1,7 +1,10 @@
-package pingfederate
+package pingfederate_test
 
 import (
 	"testing"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 
@@ -9,7 +12,7 @@ import (
 )
 
 func TestIdpAdapters(t *testing.T) {
-	svc := idpAdapters.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+	svc := idpAdapters.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
 
 	input := idpAdapters.GetIdpAdaptersInput{}
 	_, resp1, err1 := svc.GetIdpAdapters(&input)
@@ -22,21 +25,21 @@ func TestIdpAdapters(t *testing.T) {
 			AttributeContract: &models.IdpAdapterAttributeContract{
 				CoreAttributes: &[]*models.IdpAdapterAttribute{
 					&models.IdpAdapterAttribute{
-						Masked:    Bool(false),
-						Name:      String("subject"),
-						Pseudonym: Bool(true),
+						Masked:    pingfederate.Bool(false),
+						Name:      pingfederate.String("subject"),
+						Pseudonym: pingfederate.Bool(true),
 					},
 				},
 				ExtendedAttributes: &[]*models.IdpAdapterAttribute{},
-				MaskOgnlValues:     Bool(false),
+				MaskOgnlValues:     pingfederate.Bool(false),
 			},
 			AttributeMapping: &models.IdpAdapterContractMapping{
 				AttributeContractFulfillment: map[string]*models.AttributeFulfillmentValue{
 					"subject": &models.AttributeFulfillmentValue{
 						Source: &models.SourceTypeIdKey{
-							Type: String("ADAPTER"),
+							Type: pingfederate.String("ADAPTER"),
 						},
-						Value: String("subject"),
+						Value: pingfederate.String("subject"),
 					},
 				},
 				IssuanceCriteria: &models.IssuanceCriteria{
@@ -46,23 +49,23 @@ func TestIdpAdapters(t *testing.T) {
 			Configuration: &models.PluginConfiguration{
 				Fields: &[]*models.ConfigField{
 					&models.ConfigField{
-						Name:  String("Password"),
-						Value: String("Password01"),
+						Name:  pingfederate.String("Password"),
+						Value: pingfederate.String("Password01"),
 					},
 					&models.ConfigField{
-						Name:  String("Confirm Password"),
-						Value: String("Password01"),
+						Name:  pingfederate.String("Confirm Password"),
+						Value: pingfederate.String("Password01"),
 					},
 					&models.ConfigField{
-						Name:  String("Authentication Service"),
-						Value: String("http://foo.com"),
+						Name:  pingfederate.String("Authentication Service"),
+						Value: pingfederate.String("http://foo.com"),
 					},
 				},
 			},
-			Id:   String("woot"),
-			Name: String("woot"),
+			Id:   pingfederate.String("woot"),
+			Name: pingfederate.String("woot"),
 			PluginDescriptorRef: &models.ResourceLink{
-				Id: String("com.pingidentity.adapters.opentoken.IdpAuthnAdapter"),
+				Id: pingfederate.String("com.pingidentity.adapters.opentoken.IdpAuthnAdapter"),
 			},
 		},
 	}
@@ -76,8 +79,8 @@ func TestIdpAdapters(t *testing.T) {
 		Body: input2.Body,
 		Id:   *input2.Body.Id,
 	}
-	(*input3.Body.Configuration.Fields)[0].Value = String("Password02")
-	(*input3.Body.Configuration.Fields)[1].Value = String("Password02")
+	(*input3.Body.Configuration.Fields)[0].Value = pingfederate.String("Password02")
+	(*input3.Body.Configuration.Fields)[1].Value = pingfederate.String("Password02")
 
 	result3, resp3, err3 := svc.UpdateIdpAdapter(&input3)
 	equals(t, nil, err3)

@@ -1,7 +1,10 @@
-package pingfederate
+package pingfederate_test
 
 import (
 	"testing"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 
@@ -9,7 +12,7 @@ import (
 )
 
 func TestPasswordCredentialValidatorsDescriptors(t *testing.T) {
-	svc := passwordCredentialValidators.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+	svc := passwordCredentialValidators.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
 
 	result1, resp1, err1 := svc.GetPasswordCredentialValidatorDescriptors()
 	equals(t, nil, err1)
@@ -26,7 +29,7 @@ func TestPasswordCredentialValidatorsDescriptors(t *testing.T) {
 }
 
 func TestPasswordCredentialValidators(t *testing.T) {
-	svc := passwordCredentialValidators.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+	svc := passwordCredentialValidators.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
 
 	_, resp1, err1 := svc.GetPasswordCredentialValidators()
 	equals(t, nil, err1)
@@ -34,30 +37,30 @@ func TestPasswordCredentialValidators(t *testing.T) {
 
 	input2 := passwordCredentialValidators.CreatePasswordCredentialValidatorInput{
 		Body: models.PasswordCredentialValidator{
-			Id:   String("pwdval2"),
-			Name: String("pwdval2"),
+			Id:   pingfederate.String("pwdval2"),
+			Name: pingfederate.String("pwdval2"),
 			PluginDescriptorRef: &models.ResourceLink{
-				Id:       String("org.sourceid.saml20.domain.SimpleUsernamePasswordCredentialValidator"),
-				Location: String("https://localhost:9999/pf-admin-api/v1/passwordCredentialValidators/descriptors/org.sourceid.saml20.domain.SimpleUsernamePasswordCredentialValidator"),
+				Id:       pingfederate.String("org.sourceid.saml20.domain.SimpleUsernamePasswordCredentialValidator"),
+				Location: pingfederate.String("https://localhost:9999/pf-admin-api/v1/passwordCredentialValidators/descriptors/org.sourceid.saml20.domain.SimpleUsernamePasswordCredentialValidator"),
 			},
 			Configuration: &models.PluginConfiguration{
 				Tables: &[]*models.ConfigTable{
 					{
-						Name: String("Users"),
+						Name: pingfederate.String("Users"),
 						Rows: &[]*models.ConfigRow{
 							{
 								Fields: &[]*models.ConfigField{
 									{
-										Name:  String("Username"),
-										Value: String("demo"),
+										Name:  pingfederate.String("Username"),
+										Value: pingfederate.String("demo"),
 									},
 									{
-										Name:  String("Password"),
-										Value: String("Demo1234"),
+										Name:  pingfederate.String("Password"),
+										Value: pingfederate.String("Demo1234"),
 									},
 									{
-										Name:  String("Confirm Password"),
-										Value: String("Demo1234"),
+										Name:  pingfederate.String("Confirm Password"),
+										Value: pingfederate.String("Demo1234"),
 									},
 								},
 							},
@@ -68,7 +71,7 @@ func TestPasswordCredentialValidators(t *testing.T) {
 			AttributeContract: &models.PasswordCredentialValidatorAttributeContract{
 				CoreAttributes: &[]*models.PasswordCredentialValidatorAttribute{
 					{
-						Name: String("username"),
+						Name: pingfederate.String("username"),
 					},
 				},
 			},
@@ -84,7 +87,7 @@ func TestPasswordCredentialValidators(t *testing.T) {
 		Body: input2.Body,
 		Id:   *input2.Body.Id,
 	}
-	(*(*(*input3.Body.Configuration.Tables)[0].Rows)[0].Fields)[0].Value = String("demo update")
+	(*(*(*input3.Body.Configuration.Tables)[0].Rows)[0].Fields)[0].Value = pingfederate.String("demo update")
 
 	result3, resp3, err3 := svc.UpdatePasswordCredentialValidator(&input3)
 	equals(t, nil, err3)

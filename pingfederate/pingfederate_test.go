@@ -1,8 +1,9 @@
-package pingfederate
+package pingfederate_test
 
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 	"log"
 	"net/http"
 	"net/url"
@@ -66,8 +67,8 @@ func TestMain(m *testing.M) {
 	if err := pool.Retry(func() error {
 		var err error
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-		pfUrl, _ = url.Parse(fmt.Sprintf("https://localhost:%s", resource.GetPort("9999/tcp")))
-		client := version.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+		pfUrl, _ = url.Parse(fmt.Sprintf("https://localhost:%s/pf-admin-api/v1", resource.GetPort("9999/tcp")))
+		client := version.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
 
 		log.Println("Attempting to connect to PingFederate admin API....")
 		_, _, err = client.GetVersion()
@@ -89,18 +90,6 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 
 }
-
-// func config(t *testing.T, filePath, path, body string) *PfClient {
-// 	server := setupTestServer(t, filePath, path, body)
-// 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-// 	url, _ := url.Parse(server.URL)
-// 	return NewClient("Administrator", "2Federate", url, "/pf-admin-api/v1", nil)
-// }
-
-//func basicClient() *client.PfClient {
-//	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-//	return client.NewClient("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
-//}
 
 // ok fails the test if an err is not nil.
 func ok(tb testing.TB, err error) {

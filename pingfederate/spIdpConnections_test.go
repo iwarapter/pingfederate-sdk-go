@@ -1,14 +1,17 @@
-package pingfederate
+package pingfederate_test
 
 import (
 	"testing"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"github.com/iwarapter/pingfederate-sdk-go/services/spIdpConnections"
 )
 
 func TestSpIdpConnections(t *testing.T) {
-	svc := spIdpConnections.New("Administrator", "2Federate", pfUrl, "/pf-admin-api/v1", nil)
+	svc := spIdpConnections.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
 
 	input1 := spIdpConnections.GetConnectionsInput{}
 	result1, resp1, err1 := svc.GetConnections(&input1)
@@ -18,23 +21,23 @@ func TestSpIdpConnections(t *testing.T) {
 
 	input2 := spIdpConnections.CreateConnectionInput{
 		Body: models.IdpConnection{
-			Type:                   String("IDP"),
-			Name:                   String("foo"),
-			EntityId:               String("foo"),
-			Active:                 Bool(true),
+			Type:                   pingfederate.String("IDP"),
+			Name:                   pingfederate.String("foo"),
+			EntityId:               pingfederate.String("foo"),
+			Active:                 pingfederate.Bool(true),
 			ContactInfo:            &models.ContactInfo{},
-			LoggingMode:            String("STANDARD"),
-			LicenseConnectionGroup: String(""),
+			LoggingMode:            pingfederate.String("STANDARD"),
+			LicenseConnectionGroup: pingfederate.String(""),
 			Credentials: &models.ConnectionCredentials{
 				Certs: &[]*models.ConnectionCert{},
 				OutboundBackChannelAuth: &models.OutboundBackChannelAuth{
-					Type:                String("OUTBOUND"),
-					DigitalSignature:    Bool(false),
-					ValidatePartnerCert: Bool(true),
+					Type:                pingfederate.String("OUTBOUND"),
+					DigitalSignature:    pingfederate.Bool(false),
+					ValidatePartnerCert: pingfederate.Bool(true),
 				},
 			},
 			AttributeQuery: &models.IdpAttributeQuery{
-				Url:          String("http://foo.com"),
+				Url:          pingfederate.String("http://foo.com"),
 				NameMappings: &[]*models.AttributeQueryNameMapping{},
 				// Policy:       &IdpAttributeQueryPolicy{
 				// 	SignAttributeQuery: ,

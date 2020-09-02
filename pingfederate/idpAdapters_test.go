@@ -87,11 +87,19 @@ func TestIdpAdapters(t *testing.T) {
 	equals(t, 200, resp3.StatusCode)
 	equals(t, *result3.Name, "woot")
 
-	input4 := idpAdapters.DeleteIdpAdapterInput{
+	input4 := idpAdapters.GetIdpAdaptersInput{
+		Filter: *input2.Body.Name,
+	}
+	result4, resp4, err4 := svc.GetIdpAdapters(&input4)
+	ok(t, err4)
+	equals(t, 200, resp4.StatusCode)
+	equals(t, *(*result4.Items)[0].Name, "woot")
+
+	input5 := idpAdapters.DeleteIdpAdapterInput{
 		Id: *input2.Body.Id,
 	}
-	result4, resp4, err4 := svc.DeleteIdpAdapter(&input4)
-	equals(t, nil, err4)
-	equals(t, 204, resp4.StatusCode)
-	equals(t, (*models.ApiResult)(nil), result4)
+	result5, resp5, err5 := svc.DeleteIdpAdapter(&input5)
+	equals(t, nil, err5)
+	equals(t, 204, resp5.StatusCode)
+	equals(t, (*models.ApiResult)(nil), result5)
 }

@@ -51,9 +51,10 @@ type Request struct {
 
 // An Operation is the service API operation to be made.
 type Operation struct {
-	Name       string
-	HTTPMethod string
-	HTTPPath   string
+	Name        string
+	HTTPMethod  string
+	HTTPPath    string
+	QueryParams map[string]string
 }
 
 // New returns a new Request pointer for the service API
@@ -91,6 +92,14 @@ func New(cfg config.Config, clientInfo metadata.ClientInfo, operation *Operation
 		httpReq.URL = &url.URL{}
 		err = fmt.Errorf("invalid endpoint uri %s", err)
 	}
+
+	q := httpReq.URL.Query()
+	for k, v := range operation.QueryParams {
+		if v != "" {
+			q.Set(k, v)
+		}
+	}
+	httpReq.URL.RawQuery = q.Encode()
 
 	r := &Request{
 		Config:     cfg,

@@ -17,7 +17,7 @@ func TestDataStoreSimpleGetRequest(t *testing.T) {
 	result1, resp1, err1 := svc.GetDataStores()
 	ok(t, err1)
 	equals(t, resp1.StatusCode, 200)
-	equals(t, *(*result1.Items)[0].ConnectionUrl, "jdbc:hsqldb:${pf.server.data.dir}${/}hypersonic${/}ProvisionerDefaultDB;hsqldb.lock_file=false")
+	equals(t, *(*result1.Items)[0].(*models.JdbcDataStore).ConnectionUrl, "jdbc:hsqldb:${pf.server.data.dir}${/}hypersonic${/}ProvisionerDefaultDB;hsqldb.lock_file=false")
 }
 
 func TestDataStoreSimpleRequests(t *testing.T) {

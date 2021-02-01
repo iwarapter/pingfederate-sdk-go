@@ -3,7 +3,6 @@ package pingfederate_test
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 	"log"
 	"net/http"
 	"net/url"
@@ -13,6 +12,8 @@ import (
 	"runtime"
 	"testing"
 	"time"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 
 	"github.com/iwarapter/pingfederate-sdk-go/services/version"
 
@@ -40,7 +41,7 @@ func TestMain(m *testing.M) {
 			Repository: "pingidentity/pingfederate",
 			Mounts:     []string{dir + "/pingfederate-data.zip:/opt/in/instance/server/default/data/drop-in-deployer/data.zip"},
 			Env:        []string{"PING_IDENTITY_ACCEPT_EULA=YES", fmt.Sprintf("PING_IDENTITY_DEVOPS_USER=%s", devOpsUser), fmt.Sprintf("PING_IDENTITY_DEVOPS_KEY=%s", devOpsKey)},
-			Tag:        "10.0.5-edge",
+			Tag:        "10.0.6-edge",
 		}
 	} else {
 		options = &dockertest.RunOptions{
@@ -51,7 +52,7 @@ func TestMain(m *testing.M) {
 				dir + "/pingfederate.lic:/opt/in/instance/server/default/conf/pingfederate.lic",
 				dir + "/pingfederate-data.zip:/opt/in/instance/server/default/data/drop-in-deployer/data.zip",
 			},
-			Tag: "10.0.5-edge",
+			Tag: "10.0.6-edge",
 		}
 	}
 

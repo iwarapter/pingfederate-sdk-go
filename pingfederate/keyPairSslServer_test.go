@@ -3,10 +3,11 @@ package pingfederate_test
 import (
 	"crypto/x509"
 	"encoding/pem"
-	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
-	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"net/http"
 	"testing"
+
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 

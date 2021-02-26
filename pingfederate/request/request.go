@@ -80,7 +80,11 @@ func New(cfg config.Config, clientInfo metadata.ClientInfo, operation *Operation
 
 	httpReq, _ := http.NewRequest(method, "", buf)
 
-	httpReq.SetBasicAuth(*cfg.Username, *cfg.Password)
+	if cfg.Token != nil {
+		httpReq.Header.Add("Authorization", fmt.Sprintf("Bearer %s", *cfg.Token))
+	} else {
+		httpReq.SetBasicAuth(*cfg.Username, *cfg.Password)
+	}
 	httpReq.Header.Add("X-Xsrf-Header", "pingfederate")
 	httpReq.Header.Add("User-Agent", fmt.Sprintf("%s/%s (%s; %s; %s)", pingfederate.SDKName, pingfederate.SDKVersion, runtime.Version(), runtime.GOOS, runtime.GOARCH))
 

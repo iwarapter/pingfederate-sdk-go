@@ -1,7 +1,11 @@
 package pingfederate_test
 
 import (
+	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
@@ -12,13 +16,12 @@ import (
 )
 
 func TestIdpAdapters(t *testing.T) {
-	svc := idpAdapters.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := idpAdapters.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 
 	input := idpAdapters.GetIdpAdaptersInput{}
 	_, resp1, err1 := svc.GetIdpAdapters(&input)
-	equals(t, nil, err1)
-	equals(t, 200, resp1.StatusCode)
-	//equals(t, *(*result1.Items)[0].Name, "woot")
+	require.Nil(t, err1)
+	assert.Equal(t, http.StatusOK, resp1.StatusCode)
 
 	input2 := idpAdapters.CreateIdpAdapterInput{
 		Body: models.IdpAdapter{

@@ -5,91 +5,52 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
 	"runtime"
 	"testing"
-	"time"
 
+	pf "github.com/iwarapter/pingfederate-sdk-go/pingfederate"
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
-
-	"github.com/iwarapter/pingfederate-sdk-go/services/version"
-
-	"github.com/ory/dockertest"
+	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
+	"github.com/iwarapter/pingfederate-sdk-go/services/serverSettings"
 )
 
-var pfUrl *url.URL
-
 func TestMain(m *testing.M) {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	cfg := config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1")
+	svc := serverSettings.New(cfg)
 
-	pool, err := dockertest.NewPool("")
-	if err != nil {
-		log.Fatalf("Could not connect to docker: %s", err)
-	}
-
-	devOpsUser, devOpsUserExists := os.LookupEnv("PING_IDENTITY_DEVOPS_USER")
-	devOpsKey, devOpsKeyExists := os.LookupEnv("PING_IDENTITY_DEVOPS_KEY")
-
-	var options *dockertest.RunOptions
-	dir, _ := os.Getwd()
-
-	if devOpsUserExists && devOpsKeyExists {
-		options = &dockertest.RunOptions{
-			Hostname:   "pingfederate",
-			Repository: "pingidentity/pingfederate",
-			Mounts:     []string{dir + "/pingfederate-data.zip:/opt/in/instance/server/default/data/drop-in-deployer/data.zip"},
-			Env:        []string{"PING_IDENTITY_ACCEPT_EULA=YES", fmt.Sprintf("PING_IDENTITY_DEVOPS_USER=%s", devOpsUser), fmt.Sprintf("PING_IDENTITY_DEVOPS_KEY=%s", devOpsKey)},
-			Tag:        "10.0.6-edge",
-		}
-	} else {
-		options = &dockertest.RunOptions{
-			Hostname:   "pingfederate",
-			Repository: "pingidentity/pingfederate",
-			Env:        []string{"PING_IDENTITY_ACCEPT_EULA=YES"},
-			Mounts: []string{
-				dir + "/pingfederate.lic:/opt/in/instance/server/default/conf/pingfederate.lic",
-				dir + "/pingfederate-data.zip:/opt/in/instance/server/default/data/drop-in-deployer/data.zip",
+	_, _, err := svc.UpdateServerSettings(&serverSettings.UpdateServerSettingsInput{
+		Body: models.ServerSettings{
+			FederationInfo: &models.FederationInfo{
+				BaseUrl:       pf.String("https://localhost:9031"),
+				Saml2EntityId: pf.String("testing"),
 			},
-			Tag: "10.0.6-edge",
-		}
-	}
-
-	// pulls an image, creates a container based on it and runs it
-	resource, err := pool.RunWithOptions(options)
-	resource.Expire(90)
+			RolesAndProtocols: &models.RolesAndProtocols{
+				IdpRole: &models.IdpRole{
+					Enable: pf.Bool(true),
+					Saml20Profile: &models.SAML20Profile{
+						Enable: pf.Bool(true),
+					},
+				},
+				OauthRole: &models.OAuthRole{
+					EnableOauth: pf.Bool(true),
+				},
+				SpRole: &models.SpRole{
+					Enable: pf.Bool(true),
+					Saml20Profile: &models.SpSAML20Profile{
+						Enable: pf.Bool(true),
+					},
+				},
+			},
+		},
+	})
 	if err != nil {
-		log.Fatalf("Could not start resource: %s", err)
+		log.Fatalf("unable to setup PF %s", err)
 	}
-	pool.MaxWait = time.Minute * 2
-
-	// exponential backoff-retry, because the application in the container might not be ready to accept connections yet
-	if err := pool.Retry(func() error {
-		var err error
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-		pfUrl, _ = url.Parse(fmt.Sprintf("https://localhost:%s/pf-admin-api/v1", resource.GetPort("9999/tcp")))
-		client := version.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
-
-		log.Println("Attempting to connect to PingFederate admin API....")
-		_, _, err = client.GetVersion()
-		return err
-	}); err != nil {
-		log.Fatalf("Could not connect to docker: %s", err)
-	}
-
-	os.Setenv("PINGFEDERATE_BASEURL", fmt.Sprintf("https://localhost:%s", resource.GetPort("9999/tcp")))
-	log.Println("Connected to PingFederate admin API....")
-	code := m.Run()
-	log.Println("Tests complete shutting down container")
-
-	// You can't defer this because os.Exit doesn't care for defer
-	if err := pool.Purge(resource); err != nil {
-		log.Fatalf("Could not purge resource: %s", err)
-	}
-
-	os.Exit(code)
-
+	os.Exit(m.Run())
 }
 
 // ok fails the test if an err is not nil.

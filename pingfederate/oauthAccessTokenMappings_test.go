@@ -1,20 +1,21 @@
 package pingfederate_test
 
 import (
+	"net/http"
+	"testing"
+
 	pf "github.com/iwarapter/pingfederate-sdk-go/pingfederate"
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"github.com/iwarapter/pingfederate-sdk-go/services/oauthAccessTokenManagers"
 	"github.com/iwarapter/pingfederate-sdk-go/services/oauthAccessTokenMappings"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"net/http"
-	"testing"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
 )
 
 func TestOauthAccessTokenMappings(t *testing.T) {
-	svc := oauthAccessTokenMappings.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := oauthAccessTokenMappings.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 
 	result1, resp1, err1 := svc.GetMappings()
 	require.Nil(t, err1)
@@ -22,7 +23,7 @@ func TestOauthAccessTokenMappings(t *testing.T) {
 	assert.Len(t, *result1, 0)
 
 	//setup test data
-	mgrs := oauthAccessTokenManagers.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	mgrs := oauthAccessTokenManagers.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 	_, _, err := mgrs.CreateTokenManager(&oauthAccessTokenManagers.CreateTokenManagerInput{Body: models.AccessTokenManager{
 		Id:   pf.String("foo"),
 		Name: pf.String("foo"),

@@ -235,22 +235,40 @@ func (r *Request) DataFilled() bool {
 // body, or a JSON response body that maps to ErrorResponse. Any other
 // response body will be silently ignored.
 func (r *Request) CheckResponse() {
-	if c := r.HTTPResponse.StatusCode; 200 <= c && c <= 299 {
+	switch c := r.HTTPResponse.StatusCode; {
+	case 200 <= c && c <= 299:
 		return
-	}
-	r.Data = nil
-	errorResponse := models.ApiResult{}
-	data, err := ioutil.ReadAll(r.HTTPResponse.Body)
-	if err == nil && data != nil {
-		err = json.Unmarshal(data, &errorResponse)
-		if err != nil {
-			r.Error = fmt.Errorf("unable to parse error response: %s", string(data))
-			return
+	case 400 <= c && c <= 499:
+		r.Data = nil
+		errorResponse := models.ApiResult{}
+		data, err := ioutil.ReadAll(r.HTTPResponse.Body)
+		if err == nil && data != nil {
+			err = json.Unmarshal(data, &errorResponse)
+			if err != nil {
+				r.Error = fmt.Errorf("unable to parse error response: %s", string(data))
+				return
+			}
 		}
-	}
 
-	r.Error = &PingFederateError{
-		ApiResult: errorResponse,
+		r.Error = &PingFederateError{
+			ApiResult: errorResponse,
+		}
+		return
+	default:
+		data, err := ioutil.ReadAll(r.HTTPResponse.Body)
+		if err == nil && data != nil {
+			r.Error = &PingFederateError{
+				ApiResult: models.ApiResult{
+					Message: pingfederate.String(fmt.Sprintf("%s %s", r.HTTPResponse.Status, string(data))),
+				},
+			}
+		} else {
+			r.Error = &PingFederateError{
+				ApiResult: models.ApiResult{
+					Message: pingfederate.String(r.HTTPResponse.Status),
+				},
+			}
+		}
 	}
 }
 

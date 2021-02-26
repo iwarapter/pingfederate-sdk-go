@@ -15,7 +15,7 @@ import (
 )
 
 func TestKeyPairSslServer(t *testing.T) {
-	svc := keyPairsSslServer.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := keyPairsSslServer.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 
 	result1, resp1, err1 := svc.CreateKeyPair(&keyPairsSslServer.CreateKeyPairInput{Body: models.NewKeyPairSettings{
 		City:             pingfederate.String("Test"),

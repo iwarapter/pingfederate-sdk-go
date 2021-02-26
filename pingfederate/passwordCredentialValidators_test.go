@@ -1,6 +1,9 @@
 package pingfederate_test
 
 import (
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"net/http"
 	"testing"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
@@ -12,28 +15,28 @@ import (
 )
 
 func TestPasswordCredentialValidatorsDescriptors(t *testing.T) {
-	svc := passwordCredentialValidators.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := passwordCredentialValidators.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 
 	result1, resp1, err1 := svc.GetPasswordCredentialValidatorDescriptors()
-	equals(t, nil, err1)
-	equals(t, 200, resp1.StatusCode)
-	equals(t, 5, len(*result1.Items))
+	require.Nil(t, err1)
+	assert.Equal(t, http.StatusOK, resp1.StatusCode)
+	assert.True(t, 5 <= len(*result1.Items))
 
 	input2 := passwordCredentialValidators.GetPasswordCredentialValidatorDescriptorInput{
 		Id: "org.sourceid.saml20.domain.LDAPUsernamePasswordCredentialValidator",
 	}
 	result2, resp2, err2 := svc.GetPasswordCredentialValidatorDescriptor(&input2)
-	equals(t, nil, err2)
-	equals(t, 200, resp2.StatusCode)
-	equals(t, "LDAP Username Password Credential Validator", *result2.Name)
+	require.Nil(t, err2)
+	assert.Equal(t, http.StatusOK, resp2.StatusCode)
+	assert.Equal(t, "LDAP Username Password Credential Validator", *result2.Name)
 }
 
 func TestPasswordCredentialValidators(t *testing.T) {
-	svc := passwordCredentialValidators.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := passwordCredentialValidators.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 
 	_, resp1, err1 := svc.GetPasswordCredentialValidators()
-	equals(t, nil, err1)
-	equals(t, 200, resp1.StatusCode)
+	require.Nil(t, err1)
+	assert.Equal(t, http.StatusOK, resp1.StatusCode)
 
 	input2 := passwordCredentialValidators.CreatePasswordCredentialValidatorInput{
 		Body: models.PasswordCredentialValidator{
@@ -79,9 +82,9 @@ func TestPasswordCredentialValidators(t *testing.T) {
 	}
 
 	result2, resp2, err2 := svc.CreatePasswordCredentialValidator(&input2)
-	equals(t, nil, err2)
-	equals(t, 201, resp2.StatusCode)
-	equals(t, *result2.Name, "pwdval2")
+	require.Nil(t, err2)
+	assert.Equal(t, http.StatusCreated, resp2.StatusCode)
+	assert.Equal(t, "pwdval2", *result2.Name)
 
 	input3 := passwordCredentialValidators.UpdatePasswordCredentialValidatorInput{
 		Body: input2.Body,
@@ -90,23 +93,24 @@ func TestPasswordCredentialValidators(t *testing.T) {
 	(*(*(*input3.Body.Configuration.Tables)[0].Rows)[0].Fields)[0].Value = pingfederate.String("demo update")
 
 	result3, resp3, err3 := svc.UpdatePasswordCredentialValidator(&input3)
-	equals(t, nil, err3)
-	equals(t, 200, resp3.StatusCode)
-	equals(t, *result3.Name, "pwdval2")
+	require.Nil(t, err3)
+	assert.Equal(t, http.StatusOK, resp3.StatusCode)
+	assert.Equal(t, "pwdval2", *result3.Name)
+	assert.Equal(t, "demo update", *(*(*(*result3.Configuration.Tables)[0].Rows)[0].Fields)[0].Value)
 
 	input4 := passwordCredentialValidators.GetPasswordCredentialValidatorInput{
 		Id: *input2.Body.Id,
 	}
 	result4, resp4, err4 := svc.GetPasswordCredentialValidator(&input4)
-	equals(t, nil, err4)
-	equals(t, 200, resp4.StatusCode)
-	equals(t, *result4.Name, "pwdval2")
+	require.Nil(t, err4)
+	assert.Equal(t, http.StatusOK, resp4.StatusCode)
+	assert.Equal(t, "pwdval2", *result4.Name)
 
 	input5 := passwordCredentialValidators.DeletePasswordCredentialValidatorInput{
 		Id: *input2.Body.Id,
 	}
 	result5, resp5, err5 := svc.DeletePasswordCredentialValidator(&input5)
-	equals(t, nil, err5)
-	equals(t, 204, resp5.StatusCode)
-	equals(t, (*models.ApiResult)(nil), result5)
+	require.Nil(t, err5)
+	assert.Equal(t, http.StatusNoContent, resp5.StatusCode)
+	assert.Nil(t, result5)
 }

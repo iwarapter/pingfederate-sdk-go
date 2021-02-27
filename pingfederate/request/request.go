@@ -150,9 +150,10 @@ func (r *Request) Send() error {
 		}
 
 		if err != nil {
-			fmt.Println(err)
+			log.Printf(logReqMsg, r.ClientInfo.ServiceName, r.Operation.Name, r.RequestID, "unable to DumpRequest: " + err.Error())
+		} else {
+			log.Printf(logReqMsg, r.ClientInfo.ServiceName, r.Operation.Name, r.RequestID, requestDumpStr)
 		}
-		log.Printf(logReqMsg, r.ClientInfo.ServiceName, r.Operation.Name, r.RequestID, requestDumpStr)
 	}
 	r.AttemptTime = time.Now()
 
@@ -166,9 +167,10 @@ func (r *Request) Send() error {
 	if *r.Config.LogDebug {
 		requestDump, err := httputil.DumpResponse(r.HTTPResponse, true)
 		if err != nil {
-			fmt.Println(err)
+			log.Printf(logReqMsg, r.ClientInfo.ServiceName, r.Operation.Name, r.RequestID, "unable to DumpResponse: " + err.Error())
+		} else {
+			log.Printf(logRespMsg, r.ClientInfo.ServiceName, r.Operation.Name, r.RequestID, string(requestDump))
 		}
-		log.Printf(logRespMsg, r.ClientInfo.ServiceName, r.Operation.Name, r.RequestID, string(requestDump))
 	}
 
 	r.CheckResponse()

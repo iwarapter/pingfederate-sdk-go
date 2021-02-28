@@ -1,7 +1,11 @@
 package pingfederate_test
 
 import (
+	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate"
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/config"
@@ -11,13 +15,13 @@ import (
 )
 
 func TestSpIdpConnections(t *testing.T) {
-	svc := spIdpConnections.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := spIdpConnections.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 
 	input1 := spIdpConnections.GetConnectionsInput{}
 	result1, resp1, err1 := svc.GetConnections(&input1)
-	equals(t, nil, err1)
-	equals(t, 200, resp1.StatusCode)
-	equals(t, 0, len(*result1.Items))
+	require.Nil(t, err1)
+	assert.Equal(t, http.StatusOK, resp1.StatusCode)
+	assert.Len(t, *result1.Items, 0)
 
 	input2 := spIdpConnections.CreateConnectionInput{
 		Body: models.IdpConnection{
@@ -46,12 +50,18 @@ func TestSpIdpConnections(t *testing.T) {
 		},
 	}
 	result2, resp2, err2 := svc.CreateConnection(&input2)
-	equals(t, nil, err2)
-	equals(t, 201, resp2.StatusCode)
-	equals(t, true, *result2.Active)
+	require.Nil(t, err2)
+	assert.Equal(t, http.StatusCreated, resp2.StatusCode)
+	assert.True(t, *result2.Active)
 
 	result3, resp3, err3 := svc.CreateConnection(&input2)
-	equals(t, "Validation error(s) occurred. Please review the error(s) and address accordingly.\nThe Connection ID you specified is already in use.\nThe Connection Name you specified is already in use.", err3.Error())
-	equals(t, 422, resp3.StatusCode)
-	equals(t, (*models.IdpConnection)(nil), result3)
+	require.NotNil(t, err3)
+	assert.Equal(t, "Validation error(s) occurred. Please review the error(s) and address accordingly.\nThe Connection ID you specified is already in use.\nThe Connection Name you specified is already in use.", err3.Error())
+	assert.Equal(t, http.StatusUnprocessableEntity, resp3.StatusCode)
+	assert.Nil(t, result3)
+
+	result4, resp4, err4 := svc.DeleteConnection(&spIdpConnections.DeleteConnectionInput{Id: *result2.Id})
+	require.Nil(t, err4)
+	assert.Equal(t, http.StatusNoContent, resp4.StatusCode)
+	assert.Nil(t, result4)
 }

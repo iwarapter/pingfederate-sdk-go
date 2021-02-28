@@ -12,7 +12,7 @@ import (
 )
 
 func TestDataStoreSimpleGetRequest(t *testing.T) {
-	svc := dataStores.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()).WithDebug(true))
+	svc := dataStores.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1").WithDebug(true))
 
 	result1, resp1, err1 := svc.GetDataStores()
 	ok(t, err1)
@@ -21,7 +21,7 @@ func TestDataStoreSimpleGetRequest(t *testing.T) {
 }
 
 func TestDataStoreSimpleRequests(t *testing.T) {
-	svc := dataStores.New(config.NewConfig().WithUsername("Administrator").WithPassword("2Federate").WithEndpoint(pfUrl.String()))
+	svc := dataStores.New(config.NewConfig().WithUsername("Administrator").WithPassword("2FederateM0re").WithEndpoint("https://localhost:9999/pf-admin-api/v1"))
 	//svc.LogDebug = true
 
 	create := dataStores.CreateJdbcDataStoreInput{}

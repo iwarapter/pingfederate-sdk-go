@@ -4,8 +4,22 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pingfederate-version: [ 10.0.6, 10.1.4, 10.2.2 ]
+    services:
+      pingfederate:
+        image: pingidentity/pingfederate:${{ matrix.pingfederate-version }}-edge
+        env:
+          PING_IDENTITY_ACCEPT_EULA: YES
+          PING_IDENTITY_DEVOPS_USER: ${{ secrets.PING_IDENTITY_DEVOPS_USER }}
+          PING_IDENTITY_DEVOPS_KEY: ${{ secrets.PING_IDENTITY_DEVOPS_KEY }}
+          SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
+          SERVER_PROFILE_PATH: getting-started/pingfederate
+        ports:
+          - 9999:9999
     steps:
-
     - name: Set up Go 1.14
       uses: actions/setup-go@v1
       with:
@@ -36,9 +50,6 @@ jobs:
         	(echo; echo "Unexpected difference in vendor/ directory. Run 'go mod vendor' command or revert any go.mod/go.sum/vendor changes and commit."; exit 1)
 
     - name: Test
-      env:
-        PING_IDENTITY_DEVOPS_USER: ${{ secrets.PING_IDENTITY_DEVOPS_USER }}
-        PING_IDENTITY_DEVOPS_KEY: ${{ secrets.PING_IDENTITY_DEVOPS_KEY }}
       run: |
         go test -mod=vendor ./... -v -trimpath -coverprofile=coverage.out
         go tool cover -func=coverage.out

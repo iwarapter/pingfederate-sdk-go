@@ -1,11 +1,5 @@
+on:  [push, pull_request]
 name: gosec
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
 jobs:
   tests:
     runs-on: ubuntu-latest

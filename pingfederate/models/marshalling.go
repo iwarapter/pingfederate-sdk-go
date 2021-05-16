@@ -53,7 +53,7 @@ func (f *FieldDescriptor) UnmarshalJSON(b []byte) error {
 		if err != nil {
 			return err
 		}
-	case "SELECT_FIELD":
+	case "SELECT":
 		err := json.Unmarshal(b, &f.SelectFieldDescriptor)
 		if err != nil {
 			return err

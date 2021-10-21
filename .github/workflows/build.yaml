@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pingfederate-version: [ 10.0.6, 10.1.4, 10.2.2 ]
+        pingfederate-version: [ 10.0.6, 10.1.4, 10.2.2, 10.3.1 ]
     services:
       pingfederate:
         image: pingidentity/pingfederate:${{ matrix.pingfederate-version }}-edge
@@ -17,7 +17,7 @@ jobs:
           PING_IDENTITY_DEVOPS_KEY: ${{ secrets.PING_IDENTITY_DEVOPS_KEY }}
           SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
           SERVER_PROFILE_PATH: getting-started/pingfederate
-          IMAGE_VERSION: pingfederate-alpine-az11-10.2.2-21426-9965
+          IMAGE_VERSION: pingfederate-alpine-az11-${{ matrix.pingfederate-version }}-${{ needs.getdate.outputs.date }}-d9b5
         ports:
           - 9999:9999
     steps:

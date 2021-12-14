@@ -86,3 +86,39 @@ func (f *FieldDescriptor) UnmarshalJSON(b []byte) error {
 	}
 	return nil
 }
+
+func (f *PolicyAction) UnmarshalJSON(b []byte) error {
+	type resp PolicyAction
+	err := json.Unmarshal(b, (*resp)(f))
+	if err != nil {
+		return err
+	}
+	switch *f.Type {
+	case "AUTHN_SOURCE":
+		err := json.Unmarshal(b, &f.AuthnSourcePolicyAction)
+		if err != nil {
+			return err
+		}
+	case "APC_MAPPING":
+		err := json.Unmarshal(b, &f.ApcMappingPolicyAction)
+		if err != nil {
+			return err
+		}
+	case "LOCAL_IDENTITY_MAPPING":
+		err := json.Unmarshal(b, &f.LocalIdentityMappingPolicyAction)
+		if err != nil {
+			return err
+		}
+	case "AUTHN_SELECTOR":
+		err := json.Unmarshal(b, &f.AuthnSelectorPolicyAction)
+		if err != nil {
+			return err
+		}
+	case "FRAGMENT":
+		err := json.Unmarshal(b, &f.FragmentPolicyAction)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

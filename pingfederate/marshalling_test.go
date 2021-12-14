@@ -53,3 +53,33 @@ func TestWeCanMarshalPluginDescriptors(t *testing.T) {
 	require.NotNil(t, (*desc)[0].RadioGroupFieldDescriptor.OptionValues)
 	assert.Len(t, *(*desc)[0].RadioGroupFieldDescriptor.OptionValues, 6)
 }
+
+func TestWeCanMarshalPolicyActions(t *testing.T) {
+	str := `{
+          "attributeRules": {
+            "fallbackToSuccess": true,
+            "items": [
+              {
+                "attributeName": "sub",
+                "condition": "EQUALS",
+                "expectedValue": "boo",
+                "result": "Condition"
+              }
+            ]
+          },
+          "authenticationSource": {
+            "sourceRef": {
+              "id": "bart",
+              "location": "https://localhost:9999/pf-admin-api/v1/idp/adapters/bart"
+            },
+            "type": "IDP_ADAPTER"
+          },
+          "type": "AUTHN_SOURCE"
+        }`
+	act := &models.PolicyAction{}
+	err := json.Unmarshal([]byte(str), &act)
+	assert.NoError(t, err)
+
+	require.NotNil(t, act.AuthnSourcePolicyAction)
+	require.NotNil(t, act.AuthnSourcePolicyAction.AttributeRules)
+}

@@ -5,6 +5,7 @@ import (
 	"github.com/iwarapter/pingfederate-sdk-go/pingfederate/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"strings"
 	"testing"
 )
 
@@ -82,4 +83,45 @@ func TestWeCanMarshalPolicyActions(t *testing.T) {
 
 	require.NotNil(t, act.AuthnSourcePolicyAction)
 	require.NotNil(t, act.AuthnSourcePolicyAction.AttributeRules)
+
+	b, err := json.Marshal(&models.PolicyAction{
+		ApcMappingPolicyAction:           models.ApcMappingPolicyAction{},
+		LocalIdentityMappingPolicyAction: models.LocalIdentityMappingPolicyAction{},
+		AuthnSelectorPolicyAction:        models.AuthnSelectorPolicyAction{},
+		AuthnSourcePolicyAction: models.AuthnSourcePolicyAction{
+			AttributeRules: &models.AttributeRules{
+				FallbackToSuccess: Bool(true),
+				Items: &[]*models.AttributeRule{
+					{
+						AttributeName: String("foo1"),
+						Condition:     String("foo2"),
+						ExpectedValue: String("foo3"),
+						Result:        String("foo4"),
+					},
+				},
+			},
+			AuthenticationSource: &models.AuthenticationSource{
+				SourceRef: &models.ResourceLink{Id: String("foo")},
+				Type:      String("IDP_ADAPTER"),
+			},
+		},
+		ContinuePolicyAction: models.ContinuePolicyAction{},
+		RestartPolicyAction:  models.RestartPolicyAction{},
+		DonePolicyAction:     models.DonePolicyAction{},
+		FragmentPolicyAction: models.FragmentPolicyAction{},
+		Context:              String("foo"),
+		Type:                 String("AUTHN_SOURCE"),
+	})
+	require.NoError(t, err)
+	assert.True(t, strings.Contains(string(b), "attributeRules"))
+	assert.True(t, strings.Contains(string(b), "type"))
+	assert.True(t, strings.Contains(string(b), "context"))
+
+	b, err = json.Marshal(&models.PolicyAction{
+		Context: String("foo"),
+		Type:    String("DONE"),
+	})
+	require.NoError(t, err)
+	assert.True(t, strings.Contains(string(b), "type"))
+	assert.True(t, strings.Contains(string(b), "context"))
 }

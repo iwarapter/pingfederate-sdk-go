@@ -9,6 +9,70 @@ import (
 	"testing"
 )
 
+func TestWeCanMarshalAttributeSources(t *testing.T) {
+	data := `[
+        {
+          "type": "LDAP",
+          "dataStoreRef": {
+            "id": "LDAP-0B01156DCB8373F211B5B6B10F04EC006178B620",
+            "location": "https://localhost:9999/pf-admin-api/v1/dataStores/LDAP-0B01156DCB8373F211B5B6B10F04EC006178B620"
+          },
+          "id": "ldap",
+          "description": "ldap",
+          "baseDn": "",
+          "searchScope": "SUBTREE",
+          "searchFilter": "uid=${subject}",
+          "searchAttributes": [
+            "Subject DN"
+          ],
+          "binaryAttributeSettings": {},
+          "memberOfNestedGroup": false
+        },
+        {
+          "type": "JDBC",
+          "dataStoreRef": {
+            "id": "ProvisionerDS",
+            "location": "https://localhost:9999/pf-admin-api/v1/dataStores/ProvisionerDS"
+          },
+          "id": "jdbc",
+          "description": "jdbc",
+          "schema": "INFORMATION_SCHEMA",
+          "table": "ADMINISTRABLE_ROLE_AUTHORIZATIONS",
+          "filter": "uid=${email}",
+          "columnNames": [
+            "GRANTEE",
+            "IS_GRANTABLE"
+          ]
+        }
+      ]`
+
+	var desc []*models.AttributeSource
+	err := json.Unmarshal([]byte(data), &desc)
+	assert.NoError(t, err)
+
+	assert.NotNil(t, desc[0].DataStoreRef)
+
+	for _, source := range desc {
+		switch *source.Type {
+		case "LDAP":
+			assert.Equal(t, *source.Description, *source.LdapAttributeSource.Description)
+			assert.Equal(t, *source.Id, *source.LdapAttributeSource.Id)
+			assert.Equal(t, *source.Type, *source.LdapAttributeSource.Type)
+			assert.Equal(t, *source.DataStoreRef.Id, *source.LdapAttributeSource.DataStoreRef.Id)
+		case "JDBC":
+			assert.Equal(t, *source.Description, *source.JdbcAttributeSource.Description)
+			assert.Equal(t, *source.Id, *source.JdbcAttributeSource.Id)
+			assert.Equal(t, *source.Type, *source.JdbcAttributeSource.Type)
+			assert.Equal(t, *source.DataStoreRef.Id, *source.JdbcAttributeSource.DataStoreRef.Id)
+		case "CUSTOM":
+			assert.Equal(t, *source.Description, *source.CustomAttributeSource.Description)
+			assert.Equal(t, *source.Id, *source.CustomAttributeSource.Id)
+			assert.Equal(t, *source.Type, *source.CustomAttributeSource.Type)
+			assert.Equal(t, *source.DataStoreRef.Id, *source.CustomAttributeSource.DataStoreRef.Id)
+		}
+	}
+}
+
 func TestWeCanMarshalPluginDescriptors(t *testing.T) {
 	radioGrpDesc := `[{
         "type": "RADIO_GROUP",

@@ -15,24 +15,38 @@ func (f *AttributeSource) UnmarshalJSON(b []byte) error {
 	switch *f.Type {
 	case "LDAP":
 		f.LdapAttributeSource = LdapAttributeSource{
-			DataStoreRef: f.DataStoreRef,
-			Description:  f.Description,
-			Id:           f.Id,
-			Type:         f.Type,
+			AttributeContractFulfillment: f.AttributeContractFulfillment,
+			BaseDn:                       f.BaseDn,
+			BinaryAttributeSettings:      f.BinaryAttributeSettings,
+			DataStoreRef:                 f.DataStoreRef,
+			Description:                  f.Description,
+			Id:                           f.Id,
+			MemberOfNestedGroup:          f.MemberOfNestedGroup,
+			SearchAttributes:             f.SearchAttributes,
+			SearchFilter:                 f.SearchFilter,
+			SearchScope:                  f.SearchScope,
+			Type:                         f.Type,
 		}
 	case "JDBC":
 		f.JdbcAttributeSource = JdbcAttributeSource{
-			DataStoreRef: f.DataStoreRef,
-			Description:  f.Description,
-			Id:           f.Id,
-			Type:         f.Type,
+			AttributeContractFulfillment: f.AttributeContractFulfillment,
+			ColumnNames:                  f.ColumnNames,
+			DataStoreRef:                 f.DataStoreRef,
+			Description:                  f.Description,
+			Filter:                       f.Filter,
+			Id:                           f.Id,
+			Schema:                       f.Schema,
+			Table:                        f.Table,
+			Type:                         f.Type,
 		}
 	case "CUSTOM":
 		f.CustomAttributeSource = CustomAttributeSource{
-			DataStoreRef: f.DataStoreRef,
-			Description:  f.Description,
-			Id:           f.Id,
-			Type:         f.Type,
+			AttributeContractFulfillment: f.AttributeContractFulfillment,
+			DataStoreRef:                 f.DataStoreRef,
+			Description:                  f.Description,
+			FilterFields:                 f.FilterFields,
+			Id:                           f.Id,
+			Type:                         f.Type,
 		}
 	default:
 		return errors.New("unknown data store type")

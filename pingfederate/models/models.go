@@ -737,6 +737,7 @@ type Client struct {
 	RestrictScopes                           *bool                       `json:"restrictScopes,omitempty"`
 	RestrictedResponseTypes                  *[]*string                  `json:"restrictedResponseTypes,omitempty"`
 	RestrictedScopes                         *[]*string                  `json:"restrictedScopes,omitempty"`
+	RestrictToDefaultAccessTokenManager	 *bool			     `json:"restrictToDefaultAccessTokenManager,omitempty"`
 	TokenExchangeProcessorPolicyRef          *ResourceLink               `json:"tokenExchangeProcessorPolicyRef,omitempty"`
 	UserAuthorizationUrlOverride             *string                     `json:"userAuthorizationUrlOverride,omitempty"`
 	ValidateUsingAllEligibleAtms             *bool                       `json:"validateUsingAllEligibleAtms,omitempty"`
